@@ -1,0 +1,62 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'bin/*'
+    - 'Rakefile'
+    - 'config.ru'
+    - 'vendor/**/*'
+    - 'spec/fixtures/**/*'
+    - 'spec/factories/*'
+    - 'tmp/**/*'
+    - '.git/**/*'
+  TargetRubyVersion: 2.7
+Style/Documentation:
+  Enabled: false
+Layout/LineLength:
+  Max: 120
+Metrics/MethodLength:
+  Max: 250
+Metrics/ClassLength:
+  Max: 1000
+Metrics/AbcSize:
+  Max: 250
+Metrics/BlockLength:
+  Max: 1500
+Metrics/CyclomaticComplexity:
+  Max: 50
+Metrics/PerceivedComplexity:
+  Max: 50
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/ModuleFunction:
+  Enabled: false
+Style/ParallelAssignment:
+  Enabled: false
+Style/SymbolProc:
+  Enabled: false
+Layout/HashAlignment:
+  Enabled: false
+Metrics/BlockNesting:
+  Enabled: false
+Lint/NonLocalExitFromIterator:
+  Enabled: false
+Style/HashEachMethods:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
+Gemspec/RequireMFA:
+  Enabled: false
+RSpec/FilePath:
+  CustomTransform:
+    OmniAuth: omniauth
+RSpec/MultipleMemoizedHelpers:
+  Max: 9
+Naming/FileName:
+  Exclude:
+    - 'lib/omniauth-quickbooks-oauth2.rb'
