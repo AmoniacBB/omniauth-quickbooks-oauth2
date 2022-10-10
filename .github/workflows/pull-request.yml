@@ -13,10 +13,3 @@ jobs:
         with:
           changeLogPath: 'CHANGELOG.md'
           skipLabel: 'Skip-Changelog'
-      - name: Google Chat Notification
-        uses: Co-qn/google-chat-notification@releases/v1
-        if: failure()
-        with:
-          name: Changelog checker
-          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
-          status: ${{ job.status }}
