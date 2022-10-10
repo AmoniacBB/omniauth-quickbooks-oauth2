@@ -40,20 +40,6 @@ jobs:
         run: |
           bundle exec rake
           bundle exec rubocop --format json --out rubocop.json || true
-          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
-          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
-          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-          export PATH=$SONAR_SCANNER_HOME/bin:$PATH
-          export SONAR_SCANNER_OPTS="-server"
-          sonar-scanner \
-            -Dsonar.sources=. \
-            -Dproject.settings=sonar-project.properties \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.host.url=$SONAR_HOST_URL
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_SCANNER_VERSION: 4.7.0.2747
   review_pr:
     runs-on: ubuntu-latest
     if: "contains(github.event_name, 'pull_request')"
