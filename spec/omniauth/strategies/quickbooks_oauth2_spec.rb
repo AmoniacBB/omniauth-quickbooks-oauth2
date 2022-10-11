@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe OmniAuth::Strategies::QuickbooksOauth2 do
-  stub_const('SCOPE', 'com.intuit.quickbooks.accounting openid')
   let(:request) do
     instance_double(Rack::Request,
                     params: { 'realmId' => 123 },
@@ -68,6 +67,7 @@ RSpec.describe OmniAuth::Strategies::QuickbooksOauth2 do
 
   describe '#authorize_params' do
     it 'passes account_id from request params' do
+      stub_const('SCOPE', 'com.intuit.quickbooks.accounting openid')
       options['scope'] = SCOPE
       expect(strategy.authorize_params[:scope]).to eq 'com.intuit.quickbooks.accounting openid'
     end
@@ -111,6 +111,7 @@ RSpec.describe OmniAuth::Strategies::QuickbooksOauth2 do
     let(:options) { { scope: SCOPE } }
 
     before do
+      stub_const('SCOPE', 'com.intuit.quickbooks.accounting openid')
       allow(strategy).to receive(:access_token) { access_token }
       allow(access_token).to receive(:params) { params }
     end
