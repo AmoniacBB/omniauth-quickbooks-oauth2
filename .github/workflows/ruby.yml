@@ -40,15 +40,6 @@ jobs:
         run: |
           bundle exec rake
           bundle exec rubocop --format json --out rubocop.json || true
-          sonar-scanner \
-            -Dsonar.sources=. \
-            -Dproject.settings=sonar-project.properties \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.host.url=$SONAR_HOST_URL
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_SCANNER_VERSION: 4.7.0.2747
   release:
     runs-on: ubuntu-latest
     if: "startsWith(github.ref, 'refs/tags/v')"
