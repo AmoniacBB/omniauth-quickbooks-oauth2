@@ -40,6 +40,11 @@ jobs:
         run: |
           bundle exec rake
           bundle exec rubocop --format json --out rubocop.json || true
+          sonar-scanner \
+            -Dsonar.sources=. \
+            -Dproject.settings=sonar-project.properties \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.host.url=$SONAR_HOST_URL
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
