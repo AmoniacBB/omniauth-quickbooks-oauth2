@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe OmniAuth::Strategies::QuickbooksOauth2 do
-  SCOPE = 'com.intuit.quickbooks.accounting openid'
+  stub_const('SCOPE', 'com.intuit.quickbooks.accounting openid')
   let(:request) do
     instance_double(Rack::Request,
                     params: { 'realmId' => 123 },
