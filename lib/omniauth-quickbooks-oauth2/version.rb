@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module OmniAuth
   module QuickbooksOauth2
-    VERSION = '0.2.0.alpha'.freeze
+    VERSION = '0.3.0'
   end
 end

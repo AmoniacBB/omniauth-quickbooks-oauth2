@@ -1,5 +1,21 @@
-*~
-/vendor
-# OS X
-.DS_STORE
-.bundle/
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+# rspec failure tracking
+.rspec_status
+/config/master.key
+.env.docker
+.bash_history
+.local/
+docker-compose.override.yml
+.irb_history
+coverage
+.cache
+.idea
+Gemfile.lock

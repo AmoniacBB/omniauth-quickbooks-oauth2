@@ -1,0 +1,63 @@
+name: Ruby
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - staging
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+jobs:
+  cleanup-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amoniacou/workflow-run-cleanup-action@master
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+    if: "!startsWith(github.ref, 'refs/tags/') && github.ref != 'refs/heads/master' && !contains(github.event.head_commit.message, 'ci-skip')"
+  build:
+    if: "!contains(github.event.head_commit.message, 'ci-skip')"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1 # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Set PR keys for Sonar
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "sonar.pullrequest.key=${{ github.event.number }}" >> sonar-project.properties
+          echo "sonar.pullrequest.branch=${{ github.HEAD_REF }}" >> sonar-project.properties
+          echo "sonar.pullrequest.base=${{ github.BASE_REF }}" >> sonar-project.properties
+          echo "sonar.pullrequest.github.repository=${{ github.repository }}" >> sonar-project.properties
+      - name: Build and test with Rake
+        run: |
+          bundle exec rake
+          bundle exec rubocop --format json --out rubocop.json || true
+  release:
+    runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/tags/v')"
+    needs: [build]
+    steps: # just shell
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generate token
+        id: generate_token
+        uses: AmoniacBB/github-app-token@v1
+        with:
+          app_id: ${{ secrets.BIBOOK_BOT_APP_ID }}
+          private_key: ${{ secrets.BIBOOK_BOT_APP_CERT }}
+      - name: build gem
+        run: |
+          mkdir ~/.gem
+          echo ":github: Bearer ${{ secrets.GITHUB_TOKEN }}" > ~/.gem/credentials
+          chmod 0600 ~/.gem/credentials
+          gem build omniauth-quickbooks-oauth2.gemspec
+          gem push --key github --host https://rubygems.pkg.github.com/AmoniacBB omniauth-quickbooks-oauth2-*.gem
